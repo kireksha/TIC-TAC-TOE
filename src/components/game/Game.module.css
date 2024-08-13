@@ -1,0 +1,8 @@
+.GameContainer {
+    text-align: center;
+}
+
+.ButtonStartAgain {
+    cursor: pointer;
+    margin-top: 20px;
+}
