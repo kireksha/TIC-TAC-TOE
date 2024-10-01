@@ -1,28 +1,22 @@
-import PropTypes from 'prop-types'
+import { store } from '../../store'
 
-const InformationLayout = ({ isEnded, isDraw, currentPlayer }) => {
+const InformationLayout = ({ storeState }) => {
     return (
         <>
             {
-                (!isEnded && !isDraw) &&
-                <h1>Turn {currentPlayer}</h1>
+                (!storeState.isEnded && !storeState.isDraw) &&
+                <h1>Turn {storeState.currentPlayer}</h1>
             }
             {
-                isEnded &&
-                <h1>Winner {currentPlayer}</h1>
+                storeState.isEnded &&
+                <h1>Winner {storeState.currentPlayer}</h1>
             }
             {
-                isDraw &&
+                storeState.isDraw &&
                 <h1>Draw</h1>
             }
         </>
     )
-}
-
-InformationLayout.propTypes = {
-    isEnded: PropTypes.bool,
-    isDraw: PropTypes.bool,
-    currentPlayer: PropTypes.string,
 }
 
 export default InformationLayout
