@@ -1,18 +1,18 @@
-import { store } from '../../store'
+import { store } from "../../store"
 
-const InformationLayout = ({ storeState }) => {
+const InformationLayout = () => {
     return (
         <>
             {
-                (!storeState.isEnded && !storeState.isDraw) &&
-                <h1>Turn {storeState.currentPlayer}</h1>
+                (!store.getState().isEnded && !store.getState().isDraw) &&
+                <h1>Turn {store.getState().currentPlayer}</h1>
             }
             {
-                storeState.isEnded &&
-                <h1>Winner {storeState.currentPlayer}</h1>
+                store.getState().isEnded &&
+                <h1>Winner {store.getState().currentPlayer}</h1>
             }
             {
-                storeState.isDraw &&
+                store.getState().isDraw &&
                 <h1>Draw</h1>
             }
         </>

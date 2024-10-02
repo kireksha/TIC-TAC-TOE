@@ -7,31 +7,36 @@ const WIN_PATTERNS = [
     [0, 4, 8], [2, 4, 6] // Варианты побед по диагонали
 ];
 
+const setCurrentPlayer = () => {
+    return store.getState().currentPlayer === 'X' ? 'O' : 'X'
+}
 
+const checkWinner = (fields, player) => {
+    return WIN_PATTERNS.some((pattern) => pattern.every((index) => fields[index] === player))
+}
 
-const Field = ({ field, index, storeState }) => {
+const checkDraw = (fields) => {
+    return !fields.includes('');
+};
 
-    const checkWinner = (fields = storeState.fields, currentPlayer = storeState.currentPlayer) => {
-        return WIN_PATTERNS.some((pattern) => pattern.every((index) => fields[index] === currentPlayer))
-    }
+const setFieldsFn = (i) => {
+    const newFields = store.getState().fields.slice();
+    newFields[i] = store.getState().currentPlayer;
+    return newFields
+};
+
+const Field = ({ field, index }) => {
 
     const handleClick = (index) => {
-        if (storeState.isEnded || storeState.isDraw) {
+        if (store.getState().isEnded || store.getState().isDraw || store.getState().fields[index] !== '') {
             return
         }
-        if (storeState.fields[index] !== '') {
-            return
-        }
-        store.dispatch('SET_FIELDS')
-        if (checkWinner(storeState.fields, storeState.currentPlayer)) {
-            store.dispatch('SET_IS_WINNER', true)
-            return
-        }
-        if (!storeState.fields.includes('')) {
-            store.dispatch('SET_IS_DRAW', true)
-            return
-        }
-        store.dispatch('SET_CURRENT_PLAYER')
+        store.dispatch({ type: 'SET_FIELDS', payload: setFieldsFn(index) });
+        store.dispatch({ type: 'SET_IS_ENDED', payload: checkWinner(store.getState().fields, store.getState().currentPlayer) });
+        if (!store.getState().isEnded) {
+            store.dispatch({ type: 'SET_IS_DRAW', payload: checkDraw(store.getState().fields) });
+            store.dispatch({ type: 'SET_CURRENT_PLAYER', payload: setCurrentPlayer() });
+        };
     }
 
     return <div className={styles.Field} onClick={() => handleClick(index)}>{field}</div>

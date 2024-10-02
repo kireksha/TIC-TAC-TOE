@@ -1,12 +1,12 @@
 import styles from './FieldsLayout.module.css'
-import Field from '../field/Field'
 import { store } from '../../store'
+import Field from '../field/Field'
 
-const FieldsLayout = ({ storeState }) => {
+const FieldsLayout = () => {
     return (
         <div className={styles.FieldsLayout}>
-            {storeState.fields.map((field, index) => {
-                return <Field index={index} key={index} field={field} storeState={storeState} />
+            {store.getState().fields.map((field, index) => {
+                return <Field index={index} key={index} field={field} />
             })}
         </div>
     )
