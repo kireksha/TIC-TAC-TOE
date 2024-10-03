@@ -1,11 +1,14 @@
-import styles from './FieldsLayout.module.css'
-import { store } from '../../store'
-import Field from '../field/Field'
+import styles from './FieldsLayout.module.css';
+import Field from '../field/Field';
+import { useSelector } from 'react-redux';
+import { selectField } from '../../selects';
 
 const FieldsLayout = () => {
+    const fields = useSelector(selectField);
+    
     return (
         <div className={styles.FieldsLayout}>
-            {store.getState().fields.map((field, index) => {
+            {fields.map((field, index) => {
                 return <Field index={index} key={index} field={field} />
             })}
         </div>

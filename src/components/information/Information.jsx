@@ -1,18 +1,23 @@
-import { store } from "../../store"
+import { useSelector } from "react-redux";
+import { selectIsDraw, selectIsEnded, selectCurrentPlayer } from "../../selects";
 
 const InformationLayout = () => {
+    const isEnded = useSelector(selectIsEnded);
+    const isDraw = useSelector(selectIsDraw);
+    const currentPlayer = useSelector(selectCurrentPlayer);
+
     return (
         <>
             {
-                (!store.getState().isEnded && !store.getState().isDraw) &&
-                <h1>Turn {store.getState().currentPlayer}</h1>
+                (!isEnded && !isDraw) &&
+                <h1>Turn {currentPlayer}</h1>
             }
             {
-                store.getState().isEnded &&
-                <h1>Winner {store.getState().currentPlayer}</h1>
+                isEnded &&
+                <h1>Winner {currentPlayer}</h1>
             }
             {
-                store.getState().isDraw &&
+                isDraw &&
                 <h1>Draw</h1>
             }
         </>

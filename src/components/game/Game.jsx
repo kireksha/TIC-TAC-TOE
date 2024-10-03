@@ -1,20 +1,19 @@
 import FieldsLayout from "../fieldsLayout/FieldsLayout";
 import InformatonLayout from "../information/Information";
-import { store } from "../../store";
 import styles from "./Game.module.css";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { selectIsDraw, selectIsEnded } from "../../selects";
 
 const Game = () => {
-    const [render, setRender] = useState(store.getState());
-
-    store.subscribe(() => setRender(store.getState()));
-
+    const dispatch = useDispatch();
+    const isEnded = useSelector(selectIsEnded);
+    const isDraw = useSelector(selectIsDraw);
     return (
         <div className={styles.GameContainer}>
             <InformatonLayout />
             <FieldsLayout />
-            {(store.getState().isEnded || store.getState().isDraw) &&
-                <button className={styles.ButtonStartAgain} onClick={() => store.dispatch({ type: 'RESTART_GAME' })}>Play Again</button>
+            {(isEnded || isDraw) &&
+                <button className={styles.ButtonStartAgain} onClick={() => dispatch({ type: 'RESTART_GAME' })}>Play Again</button>
             }
         </div>
     )
