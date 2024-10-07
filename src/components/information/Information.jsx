@@ -14,8 +14,11 @@ const InformationLayout = () => {
             {
                 isEnded &&
                 <h1>Winner {currentPlayer}</h1>
+                isEnded &&
+            <h1>Winner {currentPlayer}</h1>
             }
             {
+                isDraw &&
                 isDraw &&
                 <h1>Draw</h1>
             }

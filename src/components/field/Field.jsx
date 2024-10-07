@@ -1,6 +1,5 @@
-import styles from './Field.module.css';
-import { selectIsDraw, selectIsEnded, selectCurrentPlayer, selectFields } from '../../select';
-import { useDispatch, useSelector } from 'react-redux';
+import styles from './Field.module.css'
+import { store } from "../../store";
 
 const WIN_PATTERNS = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], // Варианты побед по горизонтали
@@ -8,37 +7,35 @@ const WIN_PATTERNS = [
     [0, 4, 8], [2, 4, 6] // Варианты побед по диагонали
 ];
 
-const setCurrentPlayer = (player) => {
-    return player === 'X' ? 'O' : 'X'
+const setCurrentPlayer = () => {
+    return store.getState().currentPlayer === 'X' ? 'O' : 'X'
 }
 
-const checkWinner = (field, player) => {
-    return WIN_PATTERNS.some((pattern) => pattern.every((i) => field[i] === player))
+const checkWinner = (fields, player) => {
+    return WIN_PATTERNS.some((pattern) => pattern.every((index) => fields[index] === player))
 }
 
-const checkDraw = (field) => {
-    return !field.includes('');
+const checkDraw = (fields) => {
+    return !fields.includes('');
+};
+
+const setFieldsFn = (i) => {
+    const newFields = store.getState().fields.slice();
+    newFields[i] = store.getState().currentPlayer;
+    return newFields
 };
 
 const Field = ({ field, index }) => {
-    const dispatch = useDispatch();
 
-    const isEnded = useSelector(selectIsDraw);
-    const isDraw = useSelector(selectIsEnded);
-    const currentPlayer = useSelector(selectCurrentPlayer);
-    const fields = useSelector(selectFields);
-
-    const handleClick = (i) => {
-        if (isEnded || isDraw || fields[i] !== '') {
+    const handleClick = (index) => {
+        if (store.getState().isEnded || store.getState().isDraw || store.getState().fields[index] !== '') {
             return
         }
-        const newFields = fields.slice();
-        newFields[i] = currentPlayer;
-        dispatch({ type: 'SET_FIELDS', payload: newFields });
-        dispatch({ type: 'SET_IS_ENDED', payload: checkWinner(newFields, currentPlayer) });
-        if (!checkWinner(newFields, currentPlayer)) {
-            dispatch({ type: 'SET_IS_DRAW', payload: checkDraw(newFields) });
-            dispatch({ type: 'SET_CURRENT_PLAYER', payload: setCurrentPlayer(currentPlayer) });
+        store.dispatch({ type: 'SET_FIELDS', payload: setFieldsFn(index) });
+        store.dispatch({ type: 'SET_IS_ENDED', payload: checkWinner(store.getState().fields, store.getState().currentPlayer) });
+        if (!store.getState().isEnded) {
+            store.dispatch({ type: 'SET_IS_DRAW', payload: checkDraw(store.getState().fields) });
+            store.dispatch({ type: 'SET_CURRENT_PLAYER', payload: setCurrentPlayer() });
         };
     }
 
