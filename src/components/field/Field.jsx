@@ -1,6 +1,7 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { selectFields, selectIsEnded, selectIsDraw, selectCurrentPlayer } from '../../select';
+import { connect /*, useDispatch, useSelector */ } from 'react-redux';
+// import { selectFields, selectIsEnded, selectIsDraw, selectCurrentPlayer } from '../../select';
 import styles from './Field.module.css'
+import { Component } from 'react';
 
 const WIN_PATTERNS = [
     [0, 1, 2], [3, 4, 5], [6, 7, 8], // Варианты побед по горизонтали
@@ -20,29 +21,47 @@ const checkDraw = (field) => {
     return !field.includes('');
 };
 
-const Field = ({ field, index }) => {
-    const dispatch = useDispatch();
+class FieldContainer extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            fields: props.fields,
+            currentPlayer: props.currentPlayer,
+            isEnded: props.isEnded,
+            isDraw: props.isDraw
+        };
+        this.handleClick = this.handleClick.bind(this);
+    };
 
-    const currentPlayer = useSelector(selectCurrentPlayer);
-    const isDraw = useSelector(selectIsDraw);
-    const isEnded = useSelector(selectIsEnded);
-    const fields = useSelector(selectFields);
-
-    const handleClick = (index) => {
-        if (isEnded || isDraw || fields[index] !== '') {
+    handleClick() {
+        if (this.state.isEnded || this.state.isDraw || this.state.fields[this.props.index] !== '') {
             return
         }
-        const newFields = fields.slice();
-        newFields[index] = currentPlayer;
-        dispatch({ type: 'SET_FIELDS', payload: newFields });
-        dispatch({ type: 'SET_IS_ENDED', payload: checkWinner(newFields, currentPlayer) });
-        if (!checkWinner(newFields, currentPlayer)) {
-            dispatch({ type: 'SET_IS_DRAW', payload: checkDraw(newFields) });
-            dispatch({ type: 'SET_CURRENT_PLAYER', payload: setCurrentPlayer(currentPlayer) });
+        const newFields = this.state.fields.slice();
+        newFields[this.props.index] = this.state.currentPlayer;
+        this.props.dispatch({ type: 'SET_FIELDS', payload: newFields })
+        this.props.dispatch({ type: 'SET_IS_ENDED', payload: checkWinner(this.state.fields, this.state.currentPlayer) })
+
+        if (!checkWinner(this.state.fields, this.state.currentPlayer)) {
+            this.props.dispatch({ type: 'SET_CURRENT_PLAYER', payload: this.state.currentPlayer === 'X' ? 'O' : 'X' })
+            this.props.dispatch({ type: 'SET_IS_DRAW', payload: checkDraw(newFields) })
         };
     }
 
-    return <div className={styles.Field} onClick={() => handleClick(index)}>{field}</div>
+    render() {
+        return (
+            <div className={styles.Field} onClick={this.handleClick}>{this.props.field}</div>
+        )
+    }
 }
+
+const mapStateToProps = (state) => ({
+    fields: state.fields,
+    currentPlayer: state.currentPlayer,
+    isEnded: state.isEnded,
+    isDraw: state.isDraw
+});
+
+const Field = connect(mapStateToProps)(FieldContainer);
 
 export default Field

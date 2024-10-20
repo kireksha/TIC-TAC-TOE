@@ -1,5 +1,5 @@
 import FieldsLayout from "../fieldsLayout/FieldsLayout";
-import InformatonLayout from "../information/Information";
+import InformationLayout from "../information/Information";
 import styles from "./Game.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { selectIsDraw, selectIsEnded } from "../../select";
@@ -15,7 +15,7 @@ const Game = () => {
 
     return (
         <div className={styles.GameContainer}>
-            <InformatonLayout />
+            <InformationLayout />
             <FieldsLayout />
             {(isEnded || isDraw) &&
                 <button className={styles.ButtonStartAgain} onClick={restartGame}>Play Again</button>
