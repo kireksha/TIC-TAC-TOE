@@ -38,6 +38,35 @@
     font-style: italic;
 }
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .Field:nth-child(3n) {
+        border-right: none;
+    }
+    
+    .Field:nth-child(3n + 1) {
+        border-left: none;
+    }
+    
+    .Field:nth-child(n + 7) {
+        border-bottom: none;
+    }
+    
+    .Field:nth-child(-n + 3) {
+        border-top: none;
+    }
+
+    .grid-element {
+        display: grid;
+        grid-template-columns: repeat(3, 100px);
+        grid-template-rows: repeat(3, 100px);
+        justify-content: center;
+    }
+}
+
 * {
     background-color: transparent;
 }

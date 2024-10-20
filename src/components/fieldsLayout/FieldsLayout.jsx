@@ -1,18 +1,23 @@
-import styles from './FieldsLayout.module.css';
 import Field from '../field/Field';
-import { useSelector } from 'react-redux';
-import { selectFields } from '../../select';
+import { Component } from 'react';
+import { connect } from 'react-redux';
 
-const FieldsLayout = () => {
-    const fields = useSelector(selectFields);
-
-    return (
-        <div className={styles.FieldsLayout}>
-            {fields.map((field, index) => {
-                return <Field index={index} key={index} field={field} />
-            })}
-        </div>
-    )
+class FieldsLayoutContainer extends Component {
+	render() {
+		return (
+			<div className="grid-element">
+				{this.props.fields.map((field, index) => {
+					return <Field index={index} key={index} field={field} />;
+				})}
+			</div>
+		);
+	}
 }
 
-export default FieldsLayout
+const mapStateToProps = (state) => ({
+    fields: state.fields,
+});
+
+const FieldsLayout = connect(mapStateToProps)(FieldsLayoutContainer);
+
+export default FieldsLayout;

@@ -1,27 +1,38 @@
-import FieldsLayout from "../fieldsLayout/FieldsLayout";
-import InformationLayout from "../information/Information";
-import styles from "./Game.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { selectIsDraw, selectIsEnded } from "../../select";
+import { Component } from 'react';
+import FieldsLayout from '../fieldsLayout/FieldsLayout';
+import InformationLayout from '../information/Information';
+import { connect } from 'react-redux';
 
-const Game = () => {
-    const isEnded = useSelector(selectIsDraw);
-    const isDraw = useSelector(selectIsEnded);
-    const dispatch = useDispatch();
+class GameContainer extends Component {
+    constructor(props){
+        super(props);
+        this.restartGame = this.restartGame.bind(this);
+    }
 
-    const restartGame = () => {
-        dispatch({ type: 'RESTART_GAME' });
-    };
+	restartGame() {
+		this.props.dispatch({ type: 'RESTART_GAME' });
+	}
 
-    return (
-        <div className={styles.GameContainer}>
-            <InformationLayout />
-            <FieldsLayout />
-            {(isEnded || isDraw) &&
-                <button className={styles.ButtonStartAgain} onClick={restartGame}>Play Again</button>
-            }
-        </div>
-    )
+	render() {
+		return (
+			<div className="text-center">
+				<InformationLayout />
+				<FieldsLayout />
+				{(this.props.isEnded || this.props.isDraw) && (
+					<button className="pointer mt-10 border-black border-2 border-solid p-1.5" onClick={this.restartGame}>
+						Play Again
+					</button>
+				)}
+			</div>
+		);
+	}
 }
 
-export default Game
+const mapStateToProps = (state) => ({
+    isEnded: state.isEnded,
+    isDraw: state.isDraw,
+});
+
+const Game = connect(mapStateToProps)(GameContainer);
+
+export default Game;

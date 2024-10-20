@@ -2,29 +2,20 @@ import { connect } from "react-redux"
 import { Component } from "react";
 
 class InformationLayoutContainer extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            currentPlayer: props.currentPlayer,
-            isEnded: props.isEnded,
-            isDraw: props.isDraw
-        }
-    };
-
     render() {
         return (
             <>
                 {
-                    (!this.state.isEnded && !this.state.isDraw) &&
-                    <h1>Turn {this.state.currentPlayer} </h1>
+                    (!this.props.isEnded && !this.props.isDraw) &&
+                    <h1 className="text-6xl mt-20 mb-20 font-bold">Turn {this.props.currentPlayer} </h1>
                 }
                 {
-                    this.state.isEnded &&
-                    <h1>Winner {this.state.currentPlayer}</h1>
+                    this.props.isEnded &&
+                    <h1 className="text-6xl mt-20 mb-20 font-bold">Winner {this.props.currentPlayer}</h1>
                 }
                 {
-                    this.state.isDraw &&
-                    <h1>Draw</h1>
+                    this.props.isDraw &&
+                    <h1 className="text-6xl mt-20 mb-20 font-bold">Draw</h1>
                 }
             </>
         )
